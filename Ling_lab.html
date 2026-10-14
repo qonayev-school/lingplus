@@ -2439,11 +2439,12 @@ function mapEnd() {
 
 /* ================= 10. TUG OF WAR: TRUE / FALSE ================= */
 const WIN_STEPS = 5;
+const TUG_MAX = 40; // максимум раундов (утверждений) за матч
 function newTug() { return { phase: 'pick', t: { a: 0, b: 1 }, pos: 0, stm: [], r: 0, busy: false, scored: false, rEnd: 0, rl: 0 }; }
 function tugStatements() {
-  if (S.pool.tug && S.pool.tug.length) return shuffle(S.pool.tug.slice()).slice(0, 14);
+  if (S.pool.tug && S.pool.tug.length) return shuffle(S.pool.tug.slice()).slice(0, TUG_MAX);
   const hw = shuffle(S.pool.shared.slice()); const out = [];
-  hw.slice(0, 14).forEach((x, i) => {
+  hw.slice(0, TUG_MAX).forEach((x, i) => {
     if (i % 2 === 0) { out.push({ w: x.w, h: x.h, truth: true, real: x.h }); return; }
     const alts = hw.filter(y => y.w !== x.w && y.h !== x.h && isEmoji(y.h) === isEmoji(x.h)); if (!alts.length) return;
     out.push({ w: x.w, h: pick(alts, 1)[0].h, truth: false, real: x.h });
