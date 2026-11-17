@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08172B">
-<title>LingPlus · Business English Basics</title>
+<title>LingPlus · Business English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..900;1,8..60,400..900&display=swap" rel="stylesheet">
@@ -952,6 +952,59 @@ ic-i{--ic-a:#C9A24B}
 .st-none p{font:500 22px/1.5 var(--stf);margin:14px 0 24px}
 .st :focus-visible{outline:3px solid var(--dk);outline-offset:2px}
 .st{flex:none}#stage:has(>.st){padding:24px 40px 40px}
+/* ---- stats: one-screen layouts (no scrolling) ---- */
+#stage:has(>.st){padding:14px 40px 14px;overflow:hidden}
+.st{display:flex;flex-direction:column;height:100%;min-height:0}
+.st-head{display:flex;align-items:center;gap:28px}
+.st-head h1{font-size:60px}
+.st-sub{margin-top:0;flex:1}
+.st-sub span{font-size:30px;max-width:760px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-back{font-size:17px;padding:9px 20px}
+.st-bar2{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:10px 0 12px}
+.st-chips{margin:0;gap:8px}
+.st-chip{font-size:16px;padding:7px 18px;max-width:340px}
+.st-tabs{display:flex;gap:8px;flex:none}
+.st-tab{font:800 17px var(--stf);padding:9px 22px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer;border-radius:0}
+.st-tab.on{background:#fff;color:var(--dk)}
+.st-v-dash #st-entry,.st-v-entry #st-dash{display:none}
+#st-dash,#st-entry{flex:1;min-height:0}
+/* dashboard compact */
+.st-grid{grid-template-columns:860px 1fr;gap:44px}
+.st-dons{gap:30px}
+.st-don{width:250px}.st-don svg{width:200px;height:200px;margin:0 auto}
+.st-don span{margin-top:6px;font-size:16px}
+.st-mid{grid-template-columns:300px 1fr;margin-top:16px;gap:24px}
+.st-bul{gap:12px;font-size:18px}
+.st-bar i{height:26px}.st-bars{gap:8px}
+.st-low{grid-template-columns:520px 1fr;margin-top:16px;gap:24px}
+.st-chart{width:520px}
+.st-txt p{font-size:18px;margin-bottom:10px}
+.st-rib{height:118px;margin-bottom:14px;grid-template-columns:120px 1fr}
+.st-rib .lt{width:76px;height:76px;font-size:40px;margin-left:20px}
+.st-rib h4{font-size:18px}.st-rib p{font-size:17px}
+.st-h2{margin:14px 0 10px;font-size:38px}
+.st-obj{grid-template-columns:1fr 150px}
+.st-obj .st-txt p{font-size:17px;margin-bottom:8px}
+.st-sig{height:130px}
+.st-c strong{font-size:32px}.st-c .dots{padding-bottom:8px}.st-c{padding:10px 14px 12px}
+/* entry compact */
+.st-ent{margin-top:0;padding:16px 30px 18px;height:100%;box-sizing:border-box;display:flex;flex-direction:column}
+.st-ent h2{font-size:30px}
+.st-ent .top{margin-bottom:8px}
+.st .st-in{font-size:17px;padding:6px 12px}
+.st-rh,.st-row{padding:2px 0;gap:12px}
+.st-rh{padding-bottom:6px;font-size:14px}
+.st-row b{font-size:18px}.st-pc{font-size:20px}
+.st-x{width:34px;height:34px;font-size:15px}
+.st-acts{margin-top:10px}
+.st-btn{font-size:16px;padding:10px 22px}
+.st-lbr .av{height:28px}.st-lbr .av em{line-height:28px;font-size:16px}
+.st-none{margin-top:20px;height:auto}
+.st-ent{position:relative;overflow:auto}
+.st-paste{position:absolute;right:30px;bottom:20px;width:520px;max-width:none;margin:0;padding:16px;background:#fff;border:2px solid var(--mint);box-shadow:0 14px 40px rgba(0,0,0,.35);z-index:5}
+.st-paste textarea{font-size:17px}
+.st-rows{flex:1;min-height:0;overflow:auto}
+
 </style>
 </head>
 <body>
@@ -960,13 +1013,13 @@ ic-i{--ic-a:#C9A24B}
   <canvas id="in-bg" aria-hidden="true"></canvas>
   <h1 class="i-wm" aria-label="Business English">
     <span class="i-ln i-ln1" aria-hidden="true">Business</span>
-    <span class="i-ln i-ln2" aria-hidden="true">English Basics</span>
+    <span class="i-ln i-ln2" aria-hidden="true">English</span>
   </h1>
   <canvas id="in-ball" aria-hidden="true"></canvas>
 
   <header class="i-top">
     <div class="i-brand">Ling<b>+</b></div>
-    <div class="i-tag">Business English Basics</div>
+    <div class="i-tag">Business English</div>
   </header>
 
   <section class="i-copy">
@@ -1541,7 +1594,7 @@ function renderBar() {
   const nav = activeModes().map(m => [m, MODES[m].e, MODES[m].n]);
   const allOff = !Aud.musOn && !Aud.sfxOn;
   $('#bar').innerHTML =
-    `<div class="brand">${LOGO}<span>LingPlus<small>Business English Basics</small></span></div>` +
+    `<div class="brand">${LOGO}<span>LingPlus<small>Business English</small></span></div>` +
     `<nav id="nav">${nav.map(([k, e, n]) => `<button class="step ${S.stage === k ? 'on' : ''}" data-do="go" data-go="${k}" title="${n}" ${S.started ? '' : 'disabled'}>${e}<em>${n}</em></button>`).join('')}</nav>` +
     `<div id="score"></div>` +
     `<span id="mclock" class="mclock" hidden></span><div class="react"><div class="rbs"><button class="rb r1" data-do="react" data-e="👍" aria-label="Like">👍</button><button class="rb r2" data-do="react" data-e="❤️" aria-label="Love">❤️</button><button class="rb r3" data-do="react" data-e="🔥" aria-label="Fire">🔥</button></div><span><b id="rcount">${fmtN(S.reactions)}</b> Reactions</span></div>` +
@@ -3610,7 +3663,7 @@ document.addEventListener('keydown', e => {
 
 /* ================= STATISTICS: manual student results per saved lesson + overall ================= */
 const ST_KEY = 'english_mission_stats_v1';
-const ST = { sel: window.__SEED_LESSON || '*', paste: false };
+const ST = { sel: window.__SEED_LESSON || '*', paste: false, view: 'dash' };
 let STD = (() => { try { const o = JSON.parse(localStorage.getItem(ST_KEY) || 'null'); if (o && typeof o === 'object' && o.lessons) return o; } catch (_) {} return { goal: 70, pass: 50, lessons: {} }; })();
 STD.goal = STD.goal || 70; STD.pass = STD.pass || 50;
 function stSave() { try { localStorage.setItem(ST_KEY, JSON.stringify(STD)); } catch (_) {} }
@@ -3721,14 +3774,15 @@ function stEntry(name) {
   return `<section class="st-ent"><div class="top"><h2>Students and results</h2><label class="st-mx">Maximum points per lesson <input class="st-in sm" data-f="max" type="number" min="1" step="any" value="${L.max}" aria-label="Maximum points"></label></div>
   <div class="st-rh"><span>#</span><span>Name</span><span>Score</span><span>Result</span><span>Present</span><span></span></div>${L.students.map((r, i) => stRowHTML(r, i, L.max)).join('') || '<p class="st-hint">No students yet. Click “Add student” or paste a list.</p>'}
   <div class="st-acts"><button class="st-btn" data-st="add">+ Add student</button><button class="st-btn g" data-st="paste">Paste list</button><button class="st-btn g" data-st="clear">Clear scores</button></div>
-  ${ST.paste ? `<div class="st-paste"><textarea id="stpaste" rows="6" placeholder="Asem 85&#10;Nurlan 72&#10;Dana"></textarea><p class="st-hint">One student per line: name and, if needed, a score after a space. Scores can be added later.</p><button class="st-btn" data-st="pasteGo">Add to lesson</button></div>` : ''}</section>`;
+  ${ST.paste ? `<div class="st-paste"><textarea id="stpaste" rows="5" placeholder="Asem 85&#10;Nurlan 72&#10;Dana"></textarea><p class="st-hint">One student per line: name and, if needed, a score after a space. Scores can be added later.</p><button class="st-btn" data-st="pasteGo">Add to lesson</button></div>` : ''}</section>`;
 }
 SCREENS.stats = function () {
   const names = stNames(); if (ST.sel !== '*' && !names.includes(ST.sel)) ST.sel = '*';
   const head = `<header class="st-head"><h1>STATISTICS</h1><div class="st-sub"><span>${ST.sel === '*' ? 'All lessons' : esc(ST.sel)}</span><i></i><button class="st-back" data-do="go" data-go="setup">← Back to lesson setup</button></div></header>`;
   if (!names.length) { $('#stage').innerHTML = `<div class="st">${head}<div class="st-ent st-none"><h2>No saved lessons yet</h2><p>Statistics are kept for each saved lesson. Open the setup, click “Save” in the “My lessons” block — and the lesson will appear here.</p><button class="st-btn" data-do="go" data-go="setup">Go to setup</button></div></div>`; return; }
   const chips = [['*', 'All lessons']].concat(names.map(n => [n, n])).map(([k, t]) => `<button class="st-chip ${ST.sel === k ? 'on' : ''}" data-st="sel" data-n="${esc(k)}" title="${esc(t)}">${esc(t)}</button>`).join('');
-  $('#stage').innerHTML = `<div class="st">${head}<div class="st-chips">${chips}</div><div id="st-dash">${stDash(ST.sel)}</div><div id="st-entry">${stEntry(ST.sel)}</div></div>`;
+  const tabs = [['dash', 'Dashboard'], ['entry', 'Students and results']].map(([k, t]) => `<button class="st-tab ${ST.view === k ? 'on' : ''}" data-st="view" data-v="${k}">${t}</button>`).join('');
+  $('#stage').innerHTML = `<div class="st st-v-${ST.view}">${head}<div class="st-bar2"><div class="st-chips">${chips}</div><div class="st-tabs">${tabs}</div></div><div id="st-dash">${stDash(ST.sel)}</div><div id="st-entry">${stEntry(ST.sel)}</div></div>`;
 };
 function stRefresh(focus) {
   const d = $('#st-dash'), e = $('#st-entry'); if (d) d.innerHTML = stDash(ST.sel); if (e) e.innerHTML = stEntry(ST.sel);
@@ -3738,6 +3792,7 @@ function stPcAll() { const L = STD.lessons[ST.sel]; if (!L) return; L.students.f
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-st]'); if (!el) return; const d = el.dataset, a = d.st;
   if (a === 'sel') { ST.sel = d.n; ST.paste = false; SCREENS.stats(); sfx.tap(); return; }
+  if (a === 'view') { ST.view = d.v; SCREENS.stats(); sfx.tap(); return; }
   const L = ST.sel !== '*' ? stL(ST.sel, true) : null; if (!L) return;
   if (a === 'add') { L.students.push({ n: '', s: null, p: true }); stSave(); stRefresh(true); }
   else if (a === 'del') { L.students.splice(+d.i, 1); stSave(); stRefresh(false); }
