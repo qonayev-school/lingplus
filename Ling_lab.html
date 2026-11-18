@@ -3529,6 +3529,62 @@ function lpApplyUnlimitedTimeDefaultsOnce() {
 }
 lpApplyUnlimitedTimeDefaultsOnce();
 
+/* ================= UNITS 2-17: build full lesson content from the embedded LP_BUSINESS_BANK =================
+   WHY: the 17 lessons were seeded only as empty stubs (name + student count). Opening a stub changed just the title
+   and left words / questions / modes of the previously opened lesson (Unit 1) in place.
+   NOW: every stub gets its OWN vocabulary, questions, sentences, true/false, error-hunt and flash cards, built from
+   data that is stored inside this HTML file. It runs on every start, so any device that opens this file gets all
+   17 topics. Lessons the teacher already edited are never overwritten. */
+function lpBuildUnitSnapshot(bank, name, base) {
+  const snap = JSON.parse(JSON.stringify(base || {}));
+  const terms = bank.v.map(r => [String(r[0] || '').trim(), String(r[1] || r[2] || '').trim()]).filter(r => r[0] && r[1]);
+  const pairs = terms.map(v => v[0] + ' = ' + v[1]).join('\n');
+  const shared = terms.map(v => v[0] + ' = ' + v[1] + ' | ' + v[1]).join('\n');
+  // Bee: single words only (typed on the keyboard)
+  let bee = [];
+  terms.forEach(v => { if (!/\s/.test(v[0]) && !bee.includes(v[0])) bee.push(v[0]); });
+  if (bee.length < 6) terms.forEach(v => { const w = v[0].split(/\s+/).pop(); if (/\s/.test(v[0]) && w.length > 4 && !bee.includes(w)) bee.push(w); });
+  bee = bee.slice(0, 10);
+  // Error hunt: put a wrong option into the cloze sentence, keep the right one as the fix
+  const errors = [];
+  bank.q.forEach(r => {
+    const stem = String(r[0] || ''), ok = String(r[1] || '').trim(), bad = String(r[2] || '').trim();
+    if (stem.indexOf('___') < 0 || !ok || !bad || /\s/.test(bad)) return;
+    errors.push(stem.replace('___', bad) + ' | ' + bad + ' | ' + ok);
+  });
+  const tug = (bank.tf || []).map(r => String(r[0]).trim() + ' | ' + (String(r[1]).toUpperCase() === 'TRUE' ? 'TRUE' : 'FALSE'));
+  // Error Hunter needs a full round of topic sentences; with fewer the game would fall back to generic demo sentences, so skip it
+  const modes = ['vocab', 'match', 'bee', 'builder', 'tug', 'errors', 'flashcards'].filter(m => m !== 'errors' || errors.length >= 4);
+  snap.topic = name;
+  snap.wordsText = shared;
+  snap.questionsText = lpQuestionLines(bank.q);
+  snap.sentencesText = (bank.s || []).join('\n');
+  snap.cx = Object.assign(defCx(), {
+    vocab: pairs, match: pairs, bee: bee.join('\n'), tug: tug.join('\n'),
+    errors: errors.slice(0, 8).join('\n'),
+    flashcards_q: terms.map(v => v[0] + ' | ' + v[1]).join('\n')
+  });
+  snap.modes = modes.slice();
+  snap.playModes = Object.assign({}, snap.playModes || {}, Object.fromEntries(modes.map(m => [m, 'solo'])), { tug: 'team' });
+  lpSetUnlimitedTimeDefaults(snap);
+  return snap;
+}
+function lpSeedAllUnits() {
+  try {
+    const all = lsAll(); const first = all[LP_EXISTING_LESSON_NAMES[0]]; let filled = 0;
+    for (let i = 1; i < LP_EXISTING_LESSON_NAMES.length; i++) {
+      const name = LP_EXISTING_LESSON_NAMES[i], bank = LP_BUSINESS_BANK[i]; if (!bank) continue;
+      const cur = all[name];
+      const isStub = !cur || typeof cur !== 'object' || !cur.wordsText;
+      const isUnit1Copy = !!(cur && first && first.wordsText && cur.wordsText === first.wordsText); // old bug: Unit 1 content saved under another title
+      if (isStub || isUnit1Copy) { all[name] = lpBuildUnitSnapshot(bank, name, isStub ? cur : { topic: name }); filled++; }
+    }
+    if (filled && lsWrite(all)) window.__LP_EXISTING_LESSONS_UPDATED__ = 1;
+    window.__LP_UNITS_FILLED__ = filled;
+  } catch (e) { window.__LP_UNITS_SEED_ERROR__ = String(e && e.message || e); }
+}
+lpSeedAllUnits();
+
 
 /* ================= REPORT + CERTIFICATES ================= */
 const ordinal = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
